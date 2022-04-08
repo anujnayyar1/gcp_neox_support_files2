@@ -37,7 +37,7 @@ def parse_args():
     parser.add_argument(
         "-d",
         "--checkpoint_dir",
-        default="checkpoints/",
+        default="20B_checkpoints/",  #checkpoints/  is origin
         type=str,
         help="parent directory in which checkpoints are stored; this is the 'save' parameter of neox args",
     )
