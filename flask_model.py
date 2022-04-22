@@ -74,6 +74,8 @@ def call_model(input_string):
         ), 
         mimetype="text/event-stream")
 
+    print(f'stream_response: {stream_response}')
+
     # optional: only if you want others to access your application
     stream_response.headers.add('Access-Control-Allow-Origin', '*')
 
