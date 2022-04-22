@@ -29,8 +29,6 @@ from megatron import print_rank_0
 from megatron import mpu
 from megatron.utils import get_ltor_masks_and_position_ids, is_mp_rank_0
 
-from flask_sse import sse  # for sse streaming from flask
-
 
 
 def get_batch(neox_args, context_tokens: torch.Tensor):
@@ -901,8 +899,8 @@ def generate_samples_from_prompt_stream(
                 generated_text = neox_args.tokenizer.detokenize(generated_tokens)
                 print_rank_0("Generated Text: " + generated_text)
 
-                # for flask sse
-                sse.publish({"message": generated_text}, type='greeting')
+                # for flask
+                yield generated_text
 
 
             #pass  # finish generation and use all results below

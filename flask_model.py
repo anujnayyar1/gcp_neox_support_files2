@@ -55,7 +55,7 @@ def publish_hello():
     return "Message sent!"
 
 
-    
+
 # make text with a prompt
 @app.route('/multi/<string:input_string>', methods=['GET'])
 def call_model(input_string):
@@ -64,6 +64,22 @@ def call_model(input_string):
 	input_string = input_string.replace('+', ' ')
 	print(f'input_string: {input_string}')
 
+
+    return app.response_class(
+        generate_samples_from_prompt(
+            neox_args=neox_args,
+            model=model,
+            text=input_string,  # Example: "Anuj was having a lovely Day"
+            recompute=neox_args.recompute,
+            temperature=neox_args.temperature,
+            maximum_tokens=neox_args.maximum_tokens,
+            top_k=neox_args.top_k,
+            top_p=neox_args.top_p,
+        ), 
+        mimetype='text/event-stream')
+
+
+    """
 	model_output = generate_samples_from_prompt(
             neox_args=neox_args,
             model=model,
@@ -76,6 +92,7 @@ def call_model(input_string):
         )
 
 	return jsonify({'result': model_output})
+    """
 
 
 if __name__ == '__main__':
