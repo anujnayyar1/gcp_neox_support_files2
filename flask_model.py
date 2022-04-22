@@ -19,6 +19,12 @@ model, neox_args = setup_for_inference_or_eval(use_cache=True)
 
 
 
+@app.route('/')
+def index():
+	return jsonify({'we await': 'your json'})
+
+
+
 # make text with a prompt
 @app.route('/multi/<str:input_string>', methods=['GET'])
 def call_model(input_string):
