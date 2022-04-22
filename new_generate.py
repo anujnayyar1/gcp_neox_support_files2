@@ -63,20 +63,6 @@ def main():
             top_k=neox_args.top_k,
             top_p=neox_args.top_p,
         )
-        
-    '''
-    elif neox_args.text_gen_type == "prompt":
-        generate_samples_from_prompt(
-            neox_args=neox_args,
-            model=model,
-            text="Anuj was having a lovely Day",
-            recompute=neox_args.recompute,
-            temperature=neox_args.temperature,
-            maximum_tokens=neox_args.maximum_tokens,
-            top_k=neox_args.top_k,
-            top_p=neox_args.top_p,
-        )
-    '''
 
     else:
         raise ValueError(
