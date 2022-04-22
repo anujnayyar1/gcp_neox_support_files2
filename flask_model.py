@@ -31,36 +31,17 @@ model_output = generate_samples_from_prompt_stream(
 """
 
 
-# stream_tokens()  # makes an iterator producing text completions
-# generate_samples_from_prompt() uses stream_tokens()
-# format is 'for (inputs) in stream_tokens(inputs): do something'
-
-# that 'do something' is this code in 'interactive' mode
-if mpu.get_model_parallel_rank() == 0:
-    generated_tokens = (
-        batch_context_tokens[0]
-        .cpu()
-        .numpy()
-        .tolist()[
-            batch_token_generation_start_index[0]
-            .item() : batch_token_generation_end_index[0]
-            .item()
-        ]
-    )
-    generated_text = neox_args.tokenizer.detokenize(generated_tokens)
-    print_rank_0("Generated Text: " + generated_text)
-
-
-
-
 
 
 
 
 from flask import Flask, jsonify, request
+from flask_sse import sse
+
 
 app = Flask(__name__)
-
+app.config["REDIS_URL"] = "redis://localhost"
+app.register_blueprint(sse, url_prefix='/stream')
 
 
 @app.route('/')
@@ -68,7 +49,13 @@ def index():
 	return jsonify({'we await': 'your json'})
 
 
+@app.route('/hello')
+def publish_hello():
+    sse.publish({"message": "Hello!"}, type='greeting')
+    return "Message sent!"
 
+
+    
 # make text with a prompt
 @app.route('/multi/<string:input_string>', methods=['GET'])
 def call_model(input_string):

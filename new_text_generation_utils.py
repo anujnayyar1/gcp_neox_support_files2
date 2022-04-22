@@ -897,6 +897,11 @@ def generate_samples_from_prompt_stream(
                 )
                 generated_text = neox_args.tokenizer.detokenize(generated_tokens)
                 print_rank_0("Generated Text: " + generated_text)
+
+
+                ## add return for flask
+                return generated_text
+
             #pass  # finish generation and use all results below
 
 
@@ -943,7 +948,7 @@ def generate_samples_from_prompt_stream(
 
     return generated_texts
     """
-    
+
 
 
 
