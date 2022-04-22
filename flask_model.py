@@ -37,7 +37,8 @@ def call_model(input_string):
 	return jsonify({'result': model_output})
 
 
-
+if __name__ == '__main__':
+	app.run()
 
 
 
