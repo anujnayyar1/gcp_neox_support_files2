@@ -26,7 +26,7 @@ def index():
 
 
 # make text with a prompt
-@app.route('/multi/<str:input_string>', methods=['GET'])
+@app.route('/multi/<string:input_string>', methods=['GET'])
 def call_model(input_string):
 
 	model_output = generate_samples_from_prompt(
