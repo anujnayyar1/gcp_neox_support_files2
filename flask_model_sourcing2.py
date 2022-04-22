@@ -766,14 +766,16 @@ def index():
 
 
 def generate_samples_from_prompt_stream2(
- 	neox_args,
- 	model,
- 	text,  # Example: "Anuj was having a lovely Day"
- 	recompute,
- 	temperature,
- 	maximum_tokens,
- 	top_k,
- 	top_p,
+	neox_args,
+    model,
+    text: Union[List[str], str],
+    eos_token_id: int = None,
+    maximum_tokens: int = 64,
+    recompute: bool = False,
+    temperature: float = 0.0,
+    top_k: int = 0,
+    top_p: float = 0.0,
+    stop_tokens=None,
  ):
  	eos_token_id = neox_args.tokenizer.eod
 
