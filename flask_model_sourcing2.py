@@ -766,103 +766,101 @@ def index():
 
 
 def generate_samples_from_prompt_stream2(
-	neox_args,
-    model,
-    text: Union[List[str], str],
-    eos_token_id: int = None,
-    maximum_tokens: int = 64,
-    recompute: bool = False,
-    temperature: float = 0.0,
-    top_k: int = 0,
-    top_p: float = 0.0,
-    stop_tokens=None,
-):
-	eos_token_id = neox_args.tokenizer.eod
+ 	neox_args,
+ 	model,
+ 	text,  # Example: "Anuj was having a lovely Day"
+ 	recompute,
+ 	temperature,
+ 	maximum_tokens,
+ 	top_k,
+ 	top_p,
+ ):
+ 	eos_token_id = neox_args.tokenizer.eod
 
-	# type check
-	assert any(
-		[isinstance(text, str), isinstance(text, list)]
-	), "Text should be in string or list form"
-	if isinstance(text, str):
-		text = [text]
+ 	# type check
+ 	assert any(
+ 		[isinstance(text, str), isinstance(text, list)]
+ 	), "Text should be in string or list form"
+ 	if isinstance(text, str):
+ 		text = [text]
 
-	input_count = len(text)
-	input_pos = 0
+ 	input_count = len(text)
+ 	input_pos = 0
 
-	# generate completions
-	generated_texts = []
-	for i in range(1):  #maximum_tokens):  # max tokens returned maximum_tokens
-		model.module.clear_cache()  # clear kv cache between batches
+ 	# generate completions
+ 	generated_texts = []
+ 	for i in range(10):  # 10 tokens returned CHANGE THIS HARD CODED LIMIT!!
+ 		model.module.clear_cache()  # clear kv cache between batches
 
-		start_time = time.time()
-		# Tokenize text, and check whether we should terminate process
-		terminate_runs = 0
-		if input_pos == input_count:
-			terminate_runs = 1
-		else:
-			raw_text = text[input_pos]
-			input_pos += 1
+ 		start_time = time.time()
+ 		# Tokenize text, and check whether we should terminate process
+ 		terminate_runs = 0
+ 		if input_pos == input_count:
+ 			terminate_runs = 1
+ 		else:
+ 			raw_text = text[input_pos]
+ 			input_pos += 1
 
-			if raw_text == "":
-				context_tokens = [eos_token_id]
-			else:
-				context_tokens = neox_args.tokenizer.tokenize(raw_text)
-			context_length = len(context_tokens)
+ 			if raw_text == "":
+ 				context_tokens = [eos_token_id]
+ 			else:
+ 				context_tokens = neox_args.tokenizer.tokenize(raw_text)
+ 			context_length = len(context_tokens)
 
-			if context_length >= (neox_args.seq_length // 2):
-				print_rank_0(
-					"\nWarning! Context length",
-					context_length,
-					"\nPlease give smaller context (e.g. half of the "
-					"max sequence length)!",
-				)
-		if not is_mp_rank_0():
-			context_tokens = neox_args.tokenizer.tokenize("EMPTY TEXT")
-			context_length = len(context_tokens)
-			terminate_runs = 0
+ 			if context_length >= (neox_args.seq_length // 2):
+ 				print_rank_0(
+ 					"\nWarning! Context length",
+ 					context_length,
+ 					"\nPlease give smaller context (e.g. half of the "
+ 					"max sequence length)!",
+ 				)
+ 		if not is_mp_rank_0():
+ 			context_tokens = neox_args.tokenizer.tokenize("EMPTY TEXT")
+ 			context_length = len(context_tokens)
+ 			terminate_runs = 0
 
-		terminate_runs = broadcast_terminate_signal(terminate_runs)
+ 		terminate_runs = broadcast_terminate_signal(terminate_runs)
 
-		#if terminate_runs == 1:
-		#    return generated_texts
+ 		#if terminate_runs == 1:
+ 		#    return generated_texts
 
-		for (
-			batch_context_tokens,
-			batch_token_generation_start_index,
-			batch_token_generation_end_index,
-			is_done,
-		) in stream_tokens(
-			neox_args=neox_args,
-			model=model,
-			context_tokens=[context_tokens],
-			eos_token_id=eos_token_id,
-			maximum_tokens=maximum_tokens,
-			recompute=recompute,
-			temperature=temperature,
-			top_k=top_k,
-			top_p=top_p,
-			stop_tokens=stop_tokens,
-		):
-			# print the generated text
-			if mpu.get_model_parallel_rank() == 0:
-				generated_tokens = (
-					batch_context_tokens[0]
-					.cpu()
-					.numpy()
-					.tolist()[
-						batch_token_generation_start_index[0]
-						.item() : batch_token_generation_end_index[0]
-						.item()
-					]
-				)
-				generated_text = neox_args.tokenizer.detokenize(generated_tokens)
-				print_rank_0("Generated Text: " + generated_text)
+ 		for (
+ 			batch_context_tokens,
+ 			batch_token_generation_start_index,
+ 			batch_token_generation_end_index,
+ 			is_done,
+ 		) in stream_tokens(
+ 			neox_args=neox_args,
+ 			model=model,
+ 			context_tokens=[context_tokens],
+ 			eos_token_id=eos_token_id,
+ 			maximum_tokens=maximum_tokens,
+ 			recompute=recompute,
+ 			temperature=temperature,
+ 			top_k=top_k,
+ 			top_p=top_p,
+ 			stop_tokens=stop_tokens,
+ 		):
+ 			# print the generated text
+ 			if mpu.get_model_parallel_rank() == 0:
+ 				generated_tokens = (
+ 					batch_context_tokens[0]
+ 					.cpu()
+ 					.numpy()
+ 					.tolist()[
+ 						batch_token_generation_start_index[0]
+ 						.item() : batch_token_generation_end_index[0]
+ 						.item()
+ 					]
+ 				)
+ 				generated_text = neox_args.tokenizer.detokenize(generated_tokens)
+ 				print_rank_0("Generated Text: " + generated_text)
 
-				# for flask
-				print(generated_text)
-				yield f'data: {generated_text}\n\n'
+ 				# for flask
+ 				print(generated_text)
+ 				yield f'data: {generated_text}\n\n'
 
-		yield "event: end\n" # close SSE
+		#yield "event: end\n" # close SSE
 
 
 
