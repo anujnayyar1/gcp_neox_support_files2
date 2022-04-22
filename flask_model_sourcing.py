@@ -928,7 +928,7 @@ def call_model(input_string):
 		maximum_tokens=100, # neox_args.maximum_tokens,
 		top_k=neox_args.top_k,
 		top_p=neox_args.top_p,
-	), mimetype="text/event-stream")
+	))  #, mimetype="text/event-stream")
 
 	print(f'stream_response: {stream_response}')
 
