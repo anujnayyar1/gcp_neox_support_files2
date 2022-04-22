@@ -17,6 +17,7 @@ python tools/merge.py -d checkpoints -o checkpoints_merged -s 10 -mp 1 -pp 2
 python tools/merge.py -d checkpoints -o checkpoints_merged -s 10 -mp 4 -pp 1
 ```
 """
+
 import re
 import os
 import yaml
