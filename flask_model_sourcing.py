@@ -834,7 +834,7 @@ def generate_samples_from_prompt_stream2(
 
 	# generate completions
 	generated_texts = []
-	for i in range(10):  # 10 tokens returned CHANGE THIS HARD CODED LIMIT!!
+	for i in range(1):  #maximum_tokens):  # max tokens returned maximum_tokens
 		model.module.clear_cache()  # clear kv cache between batches
 
 		start_time = time.time()
@@ -904,6 +904,9 @@ def generate_samples_from_prompt_stream2(
 				# for flask
 				print(generated_text)
 				yield f'data: {generated_text}\n\n'
+
+		yield "event: end\n" # close SSE
+
 
 
 
