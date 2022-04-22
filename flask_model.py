@@ -62,7 +62,7 @@ def call_model(input_string):
 	print(f'input_string: {input_string}')
 
     stream_response = Response(
-        generate_samples_from_prompt(
+        generate_samples_from_prompt_stream(
             neox_args=neox_args,
             model=model,
             text=input_string,  # Example: "Anuj was having a lovely Day"
@@ -100,7 +100,7 @@ def call_model(input_string):
 
 if __name__ == '__main__':
 	app.run(threaded=True) # threaded mode allows concurrent requests, opening a new thread for each new request
-    
+
 
 
 
