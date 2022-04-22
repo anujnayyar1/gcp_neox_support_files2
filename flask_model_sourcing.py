@@ -834,7 +834,7 @@ def generate_samples_from_prompt_stream2(
 
 	# generate completions
 	generated_texts = []
-	for i in range(1):  #maximum_tokens):  # max tokens returned maximum_tokens
+	for i in range(1):  
 		model.module.clear_cache()  # clear kv cache between batches
 
 		start_time = time.time()
@@ -902,7 +902,7 @@ def generate_samples_from_prompt_stream2(
 				print_rank_0("Generated Text: " + generated_text)
 
 				# for flask
-				print(generated_text)
+				#print(generated_text)
 				yield f'data: {generated_text}\n\n'
 
 		yield "event: end\n" # close SSE
@@ -933,7 +933,10 @@ def call_model(input_string):
 	print(f'stream_response: {stream_response}')
 
 	# optional: only if you want others to access your application
+	stream_response.headers.add('Cache-Control', 'no-cache')
+	stream_response.headers.add('Content-Type', 'text/event-stream')
 	stream_response.headers.add('Access-Control-Allow-Origin', '*')
+	stream_response.headers.add('Connection', 'keep-alive')
 
 
 	return stream_response
