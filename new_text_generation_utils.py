@@ -900,7 +900,7 @@ def generate_samples_from_prompt_stream(
                 print_rank_0("Generated Text: " + generated_text)
 
                 # for flask
-                yield f'data: {generated_text}\n\n'
+                yield 'data: {generated_text}\n\n'
                 #yield 'hi hi hi '
 
 
