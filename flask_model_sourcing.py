@@ -923,9 +923,9 @@ def call_model(input_string):
 		maximum_tokens=neox_args.maximum_tokens,
 		top_k=neox_args.top_k,
 		top_p=neox_args.top_p,
-	))
+	), mimetype="text/event-stream")
 
-	print(f'stream_response: {stream_response}', mimetype="text/event-stream")
+	print(f'stream_response: {stream_response}')
 
 	# optional: only if you want others to access your application
 	stream_response.headers.add('Access-Control-Allow-Origin', '*')
