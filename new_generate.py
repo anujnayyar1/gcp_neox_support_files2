@@ -64,7 +64,7 @@ def main():
             top_p=neox_args.top_p,
         )
         
-    """
+    '''
     elif neox_args.text_gen_type == "prompt":
         generate_samples_from_prompt(
             neox_args=neox_args,
@@ -76,7 +76,7 @@ def main():
             top_k=neox_args.top_k,
             top_p=neox_args.top_p,
         )
-    """
+    '''
 
     else:
         raise ValueError(
