@@ -7,6 +7,7 @@ from megatron.text_generation_utils import (
     generate_samples_from_prompt,
     generate_samples_unconditional,
     generate_samples_interactive,
+    generate_samples_from_prompt_stream
 )
 
 # load model
@@ -15,7 +16,7 @@ model, neox_args = setup_for_inference_or_eval(use_cache=True)
 
 """
 ## example which should run in python
-model_output = generate_samples_from_prompt(
+model_output = generate_samples_from_prompt_stream(
             neox_args=neox_args,
             model=model,
             text='Anuj was having a terrible Day',
