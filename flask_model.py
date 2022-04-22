@@ -29,6 +29,10 @@ def index():
 @app.route('/multi/<string:input_string>', methods=['GET'])
 def call_model(input_string):
 
+	print(f'input_string: {input_string}')
+	input_string = input_string.replace('+', ' ')
+	print(f'input_string: {input_string}')
+
 	model_output = generate_samples_from_prompt(
             neox_args=neox_args,
             model=model,
