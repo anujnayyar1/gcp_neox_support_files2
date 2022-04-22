@@ -1,5 +1,11 @@
 
 
+## Script which loads a flask app to listen and respond to inputs via an API
+
+## Most of script is borrowed from megatron/text_generation_utils.py
+
+
+
 from megatron.utils import print_rank_0, setup_for_inference_or_eval
 
 
@@ -860,7 +866,10 @@ def generate_samples_from_prompt_stream2(
 
  				# for flask
  				print(generated_text)
- 				yield f'data: {generated_text}\n\n'
+ 				#yield f'data: {generated_text}\n\n'
+
+ 				yield 'event: Jackson \\ndata: {' + generated_text + ': 123}\\n\\n'
+
 
 		#yield "event: end\n" # close SSE
 
