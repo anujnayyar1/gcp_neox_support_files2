@@ -61,18 +61,18 @@ def call_model(input_string):
 	input_string = input_string.replace('+', ' ')
 	print(f'input_string: {input_string}')
 
-    stream_response = Response(
-        generate_samples_from_prompt_stream(
-            neox_args=neox_args,
-            model=model,
-            text=input_string,  # Example: "Anuj was having a lovely Day"
-            recompute=neox_args.recompute,
-            temperature=neox_args.temperature,
-            maximum_tokens=neox_args.maximum_tokens,
-            top_k=neox_args.top_k,
-            top_p=neox_args.top_p,
-        ), 
-        mimetype="text/event-stream")
+    #stream_response = Response(
+    stream_response = generate_samples_from_prompt_stream(
+        neox_args=neox_args,
+        model=model,
+        text=input_string,  # Example: "Anuj was having a lovely Day"
+        recompute=neox_args.recompute,
+        temperature=neox_args.temperature,
+        maximum_tokens=neox_args.maximum_tokens,
+        top_k=neox_args.top_k,
+        top_p=neox_args.top_p,
+    ) #, 
+    #mimetype="text/event-stream")
 
     print(f'stream_response: {stream_response}')
 
