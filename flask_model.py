@@ -9,13 +9,56 @@ from megatron.text_generation_utils import (
     generate_samples_interactive,
 )
 
+# load model
+model, neox_args = setup_for_inference_or_eval(use_cache=True)
+
+
+"""
+## example which should run in python
+model_output = generate_samples_from_prompt(
+            neox_args=neox_args,
+            model=model,
+            text='Anuj was having a terrible Day',
+            recompute=neox_args.recompute,
+            temperature=neox_args.temperature,
+            maximum_tokens=neox_args.maximum_tokens,
+            top_k=neox_args.top_k,
+            top_p=neox_args.top_p,
+        )
+
+
+"""
+
+
+# stream_tokens()  # makes an iterator producing text completions
+# generate_samples_from_prompt() uses stream_tokens()
+# format is 'for (inputs) in stream_tokens(inputs): do something'
+
+# that 'do something' is this code in 'interactive' mode
+if mpu.get_model_parallel_rank() == 0:
+    generated_tokens = (
+        batch_context_tokens[0]
+        .cpu()
+        .numpy()
+        .tolist()[
+            batch_token_generation_start_index[0]
+            .item() : batch_token_generation_end_index[0]
+            .item()
+        ]
+    )
+    generated_text = neox_args.tokenizer.detokenize(generated_tokens)
+    print_rank_0("Generated Text: " + generated_text)
+
+
+
+
+
+
+
+
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
-
-
-# load model
-model, neox_args = setup_for_inference_or_eval(use_cache=True)
 
 
 
