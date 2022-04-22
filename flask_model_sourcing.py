@@ -933,10 +933,10 @@ def call_model(input_string):
 	print(f'stream_response: {stream_response}')
 
 	# optional: only if you want others to access your application
-	stream_response.headers.add('Cache-Control', 'no-cache')
-	stream_response.headers.add('Content-Type', 'text/event-stream')
+	#stream_response.headers.add('Cache-Control', 'no-cache')
+	#stream_response.headers.add('Content-Type', 'text/event-stream')
 	stream_response.headers.add('Access-Control-Allow-Origin', '*')
-	stream_response.headers.add('Connection', 'keep-alive')
+	#stream_response.headers.add('Connection', 'keep-alive')
 
 
 	return stream_response
