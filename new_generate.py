@@ -69,7 +69,7 @@ def main():
         )
 
     elif neox_args.text_gen_type == "prompt":
-        generate_samples_from_prompt(
+        sample_generated = generate_samples_from_prompt(
             neox_args=neox_args,
             model=model,
             text="Anuj was having a lovely Day",
@@ -79,6 +79,7 @@ def main():
             top_k=neox_args.top_k,
             top_p=neox_args.top_p,
         )
+        print(f'sample_generated: {sample_generated}')
 
 
     elif neox_args.text_gen_type == "interactive":
