@@ -35,24 +35,21 @@ model_output = generate_samples_from_prompt_stream(
 
 
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, stream_with_context, Response
 from flask_sse import sse
 
 
 app = Flask(__name__)
-app.config["REDIS_URL"] = "redis://localhost"
-app.register_blueprint(sse, url_prefix='/stream')
+
+
+#app.config["REDIS_URL"] = "redis://localhost"
+#app.register_blueprint(sse, url_prefix='/stream')
 
 
 @app.route('/')
 def index():
 	return jsonify({'we await': 'your json'})
 
-
-@app.route('/hello')
-def publish_hello():
-    sse.publish({"message": "Hello!"}, type='greeting')
-    return "Message sent!"
 
 
 
@@ -64,8 +61,7 @@ def call_model(input_string):
 	input_string = input_string.replace('+', ' ')
 	print(f'input_string: {input_string}')
 
-
-    return app.response_class(
+    stream_response = Response(
         generate_samples_from_prompt(
             neox_args=neox_args,
             model=model,
@@ -76,7 +72,14 @@ def call_model(input_string):
             top_k=neox_args.top_k,
             top_p=neox_args.top_p,
         ), 
-        mimetype='text/event-stream')
+        mimetype="text/event-stream")
+
+    # optional: only if you want others to access your application
+    stream_response.headers.add('Access-Control-Allow-Origin', '*')
+
+
+    return stream_response
+
 
 
     """
@@ -96,7 +99,8 @@ def call_model(input_string):
 
 
 if __name__ == '__main__':
-	app.run()
+	app.run(threaded=True) # threaded mode allows concurrent requests, opening a new thread for each new request
+    
 
 
 
