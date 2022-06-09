@@ -1,18 +1,14 @@
 {
-  # Tokenizer /  checkpoint settings - you will need to change these to the location you have them saved in
   "vocab-file": "./20B_checkpoints/20B_tokenizer.json",
   "save": "./20B_checkpoints",
   "load": "./20B_checkpoints",
 
-  # If finetuning, edit the following to the location of your finetuning dataset:
   "data-path": "./data/pile_20B_tokenizer/pile_20B_tokenizer_text_document",
 
-  # parallelism settings ( you will want to change these based on your cluster setup, ideally scheduling pipeline stages
-  # across the node boundaries )
+ 
   "pipe-parallel-size": 4,
   "model-parallel-size": 2,
 
-  # model settings
   "num-layers": 44,
   "hidden-size": 6144,
   "num-attention-heads": 64,
@@ -27,11 +23,9 @@
   "scaled-upper-triang-masked-softmax-fusion": true,
   "bias-gelu-fusion": true,
 
-  # init methods
   "init_method": "small_init",
   "output_layer_init_method": "wang_init",
 
-  # optimizer settings
   "optimizer": {
     "type": "Adam",
     "params": {
@@ -53,25 +47,23 @@
   "cpu_offload": False
   },
 
-  # batch / data settings (assuming 96 GPUs)
+  
   "train_micro_batch_size_per_gpu": 4,
   "gradient_accumulation_steps": 32,
   "data-impl": "mmap",
   "split": "995,4,1",
 
-  # activation checkpointing
+
   "checkpoint-activations": true,
   "checkpoint-num-layers": 1,
   "partition-activations": false,
   "synchronize-each-layer": true,
 
-  # regularization
   "gradient_clipping": 1.0,
   "weight-decay": 0.01,
   "hidden-dropout": 0,
   "attention-dropout": 0,
 
-  # precision settings
   "fp16": {
     "fp16": true,
     "enabled": true,
@@ -82,7 +74,6 @@
     "min_loss_scale": 1
     },
 
-  # misc. training settings
   "train-iters": 150000,
   "lr-decay-iters": 150000,
 
@@ -93,12 +84,11 @@
   "eval-interval": 1000,
   "eval-iters": 10,
 
-  # logging
+
   "log-interval": 2,
   "steps_per_print": 2,
   "wall_clock_breakdown": false,
 
-  ### NEW DATA: ####
   "tokenizer_type": "HFTokenizer",
   "tensorboard-dir": "./tensorboard",
   "log-dir": "./logs",
