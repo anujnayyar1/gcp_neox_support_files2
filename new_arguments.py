@@ -1,10 +1,3 @@
-
-
-# mv to /root/gpt-neox/megatron/neox_arguments/arguments.py:
-# cp /root/gpt-neox/gcp_neox_support_files/new_arguments.py /root/gpt-neox/megatron/neox_arguments/arguments.py
-
-
-
 import os
 import yaml
 import json
@@ -338,9 +331,6 @@ class NeoXArgs(*BASE_CLASSES):
 
         return neox_args
 
-
-
-    # called by megatron/utils.py
     @classmethod
     def consume_neox_args(cls, overwrite_values=None):
         """
@@ -352,8 +342,6 @@ class NeoXArgs(*BASE_CLASSES):
         We then instantiate a new NeoXArgs from the dictionary (`.from_dict`). This should ensure args are never inconsistent across machines.
         """
 
-
-        ## dont use parser in adam's version
         parser = argparse.ArgumentParser(
             description="GPT-NeoX Configuration", allow_abbrev=False
         )
@@ -365,17 +353,7 @@ class NeoXArgs(*BASE_CLASSES):
         )
 
         args_parsed, _ = parser.parse_known_args()
-        megatron_config = json.loads(args_parsed.megatron_config)### ADAM's EDIT!
-
-        ## make /root/gpt-neox/megatron_config_export.json' by running original arguments.py and saving 
-        ## OG args_parsed.megatron_config as a dict, with soemthing like:
-        #with open('/root/gpt-neox/megatron_config_export.json', 'w') as fp:
-        #    json.dump(megatron_config, fp)
-
-        ## adding in our own args that arent dependent on the user specifying /root/gpt-neox/checkpoints_merged/configs/config.yml
-        ##with open('/root/gpt-neox/megatron_config_export.json', 'r') as fp:
-          ##  megatron_config = json.load(fp)
-
+        megatron_config = json.loads(args_parsed.megatron_config)
         if overwrite_values is not None:
             megatron_config.update(overwrite_values)
         return cls.from_dict(args_dict=megatron_config)
